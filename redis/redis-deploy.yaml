@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: agrobd
+  labels:
+    app: redis-stack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-stack
+  template:
+    metadata:
+      labels:
+        app: redis-stack
+    spec:
+      priorityClassName: agrobd-redis-high-priority
+      containers:
+        - name: redis-stack
+          # image: redis/redis-stack:latest
+          image: redis:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "350m"
+              memory: "512Mi"
+
+          ports:
+            - containerPort: 6379
+              name: redis
+            - containerPort: 8001
+              name: redis-ui
+
+          env:
+            - name: REDIS_ARGS
+              value: "--appendonly yes --appendfsync everysec"
+
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 15
+            periodSeconds: 20

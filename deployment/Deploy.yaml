@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agrobd
+  namespace: agrobd
+  labels:
+    app: agrobd
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agrobd
+  template:
+    metadata:
+      labels:
+        app: agrobd
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      priorityClassName: agrobd-high-priority
+      serviceAccountName: agrobd-service-account
+
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: agrobd
+
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: agrobd
+                topologyKey: "kubernetes.io/hostname"
+
+      imagePullSecrets:
+        - name: img-regv2.oss.net.bd
+      terminationGracePeriodSeconds: 30
+
+      containers:
+        - name: agrobd
+          image: img-regv2.oss.net.bd/supportv2/agrobd:26-jenkins-agrobd
+          imagePullPolicy: IfNotPresent
+
+          resources:
+            requests:
+              cpu: "300m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1024Mi"
+
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: agrobd-storage-uploads
+              mountPath: /var/www/html/public/uploads/        
+          volumeMounts:
+            - name: agrobd-storage-logs
+              mountPath: /var/www/html/storage/logs/
+
+          envFrom:
+            - configMapRef:
+                name: agrobd-config
+            - secretRef:
+                name: agrobd-secret
+     
+      volumes: 
+        - name: agrobd-storage-uploads
+          hostPath:
+            path: /var/k8s-nfs/agrobd-dev/uploads/
+            type: DirectoryOrCreate
+      volumes: 
+        - name: agrobd-storage-logs
+          hostPath:
+            path: /var/k8s-nfs/agrobd-dev/logs/
+            type: DirectoryOrCreate
+
+      # hostAliases:
+      # - ip: "103.106.118.65"
+      #   hostnames:
+      #   - "idp.ba-systems.com"

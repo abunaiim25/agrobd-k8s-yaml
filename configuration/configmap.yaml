@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agrobd-config
+  namespace: agrobd
+data:
+
+  APP_NAME: 'BA-CRM'
+  APP_ENV: 'DEV'
+  APP_DEBUG: 'true'
+  APP_KEY: 'DKrlJHHFCP58gjkwgVi3foEAnK4yYYIf'
+  APP_TYPE : 'Local'
+  server_type: 'local'
+  project_code :  'BA-CRM'
+  OSS_CODE: 'OSS-Framework'
+  DEBUGBAR_ENABLED: 'FALSE'
+
+  PROJECT_NAME : 'DEV-CRM of Business Automation Ltd.'
+  # PROJECT_ROOT: 'https://uat-crm-v2.oss.net.bd'
+  PROJECT_ROOT: 'http://192.168.10.213:31225'
+
+  # EBS_PG_API_URL: 'https://uat-ebspg.oss.net.bd/'
+  # EBS_PG_TOKEN_ENDPOINT: ebs/get-token'
+  # EBS_PG_DEBIT_ENDPOINT: 'ebs/init-debit-request'
+
+  CACHE_DRIVER: 'file'
+  SESSION_DRIVER: 'file'
+  QUEUE_DRIVER: 'sync'
+  SESSION_LIFETIME: '120'
+  REDIS_HOST: 'redis-stack'
+  REDIS_PASSWORD: 'null'
+  REDIS_PORT: '6379'
+
+  # PDF_API_BASE_URL1:  'https://apiuat-edoc.oss.net.bd/'
+
+  IS_MOBILE:  'false'
+
+
+
