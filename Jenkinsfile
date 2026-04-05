@@ -16,7 +16,7 @@ node {
                 sh "git status"
                 sh "sed -i 's+image:.*+image: ${params.DOCKER_TAG}+g' ./deployment/Deploy.yaml"               
                 sh "cat ./Deploy.yaml"
-                sh 'git config user.email "naiim@ba-systems.com"'
+                sh 'git config user.email "rayhan@ba-systems.com"'
                 sh 'git config user.name "Abu Naiim"'
                 sh "git add ."
                 sh "git commit -m '${params.DOCKER_TAG}'"
