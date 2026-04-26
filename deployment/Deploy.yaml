@@ -47,12 +47,14 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
 
       imagePullSecrets:
-        - name: img-regv2.oss.net.bd
+        #- name: img-regv2.oss.net.bd
+        - name: docker-hub-credentials-id
       terminationGracePeriodSeconds: 30
 
       containers:
         - name: agrobd
-          image: img-regv2.oss.net.bd/supportv2/agrobd:26-jenkins-agrobd
+          #image: img-regv2.oss.net.bd/supportv2/agrobd:26-jenkins-agrobd
+          image: mdnaiim/agrobd:26-jenkins-agrobd
           imagePullPolicy: IfNotPresent
 
           resources:
@@ -89,7 +91,3 @@ spec:
             path: /var/k8s-nfs/agrobd-dev/logs/
             type: DirectoryOrCreate
 
-      # hostAliases:
-      # - ip: "103.106.118.65"
-      #   hostnames:
-      #   - "idp.ba-systems.com"
