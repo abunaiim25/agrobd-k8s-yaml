@@ -53,8 +53,8 @@ spec:
 
       containers:
         - name: agrobd
-          #image: mdnaiim/agrobd:33-jenkins-agrobd
-          image: mdnaiim/agrobd:33-jenkins-agrobd
+          #image: mdnaiim/agrobd:34-jenkins-agrobd
+          image: mdnaiim/agrobd:34-jenkins-agrobd
           imagePullPolicy: IfNotPresent
 
           resources:
